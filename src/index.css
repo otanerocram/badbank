@@ -1,0 +1,7 @@
+.calcH {
+    min-height: calc(100vh - 240px);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
