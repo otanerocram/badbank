@@ -7,9 +7,12 @@ import BankReducer from "./BankReducer";
 const BankState = (props) => {
     const initialState = {
         isLogged: false,
+        clientName: "",
         userName: "",
+        userEmail: "",
         actualBalance: 0,
-        data: []
+        data: [],
+        movements: []
     };
 
     const [state, dispatch] = useReducer(BankReducer, initialState);
@@ -32,6 +35,10 @@ const BankState = (props) => {
                     type: "UPDATE_DATA",
                     payload: e.record.users
                 })
+                dispatch({
+                    type: "SIGNIN",
+                    payload: true
+                });
             })
             .catch((e) => {
                 console.log(e);

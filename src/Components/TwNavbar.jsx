@@ -46,10 +46,10 @@ export default function TwNavbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
                     <div className="flex justify-start lg:w-0 lg:flex-1">
-                        <NavLink to="#">
+                        <NavLink to="/">
                             {/* <span className="sr-only">Workflow</span> */}
-                            <span className="text-indigo-600">BadBank</span>
-                            <img className="h-8 w-auto sm:h-10" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="" />
+                            <span className="text-indigo-600 text-3xl font-sans font-extra-bold">BadBank</span>
+                            {/* <img className="h-8 w-auto sm:h-10" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="" /> */}
                         </NavLink>
                     </div>
                     <div className="-mr-2 -my-2 md:hidden">
@@ -59,7 +59,7 @@ export default function TwNavbar() {
                         </Popover.Button>
                     </div>
                     <Popover.Group as="nav" className="hidden md:flex space-x-10">
-                        <NavLink to="/balance" className="text-base font-medium text-gray-500 hover:text-gray-900" >
+                        <NavLink to="/balance" className={({isActive}) => (isActive? 'text-indigo-500 font-bold hover:text-gray-900':'text-base font-medium text-gray-500 hover:text-gray-900')}>
                             Balance
                         </NavLink>
                         <Popover className="relative">
@@ -114,19 +114,21 @@ export default function TwNavbar() {
                             )}
                         </Popover>
 
-                        <NavLink to="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                        <NavLink to="/history" className={({isActive}) => (isActive? 'text-indigo-500 font-bold hover:text-gray-900':'text-base font-medium text-gray-500 hover:text-gray-900')}>
                             All Data
                         </NavLink>
                     </Popover.Group>
-                    <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-                        <NavLink to="/signin" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-                            Sign in
+                    <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 gap-6">
+                        <NavLink to="/signin" className={({isActive}) => (isActive? 'text-indigo-500 font-bold hover:text-gray-900':'text-base font-medium text-gray-500 hover:text-gray-900')}>
+                            Login
                         </NavLink>
+                        
                         <NavLink
                             to="/signup"
-                            className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                            className={({isActive}) => (isActive? 'text-indigo-500 font-bold hover:text-gray-900':'text-base font-medium text-gray-500 hover:text-gray-900')}
+                            // className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
                         >
-                            Sign out
+                            Create Account
                         </NavLink>
                     </div>
                 </div>
@@ -168,11 +170,11 @@ export default function TwNavbar() {
                         </div>
                         <div className="py-6 px-5 space-y-6">
                             <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                                <NavLink to="#" className="text-base font-medium text-gray-900 hover:text-gray-700">
-                                    Pricing
+                                <NavLink to="/balance" className="text-base font-medium text-gray-900 hover:text-gray-700">
+                                    Balance
                                 </NavLink>
 
-                                <NavLink to="#" className="text-base font-medium text-gray-900 hover:text-gray-700">
+                                <NavLink to="/history" className="text-base font-medium text-gray-900 hover:text-gray-700">
                                     All Data
                                 </NavLink>
                             </div>

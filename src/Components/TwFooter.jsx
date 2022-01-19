@@ -1,5 +1,3 @@
-import React from "react";
-
 const TwFooter = () => {
     return (
         <footer className="footer bg-white relative pt-1 border-b-2 border-blue-700">

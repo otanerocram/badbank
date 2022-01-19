@@ -217,7 +217,7 @@ button,
   /* 1 */
   background-color: transparent;
   /* 2 */
-  background-image: none;
+  : none;
   /* 2 */
 }
 
