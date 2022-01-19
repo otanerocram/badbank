@@ -1,12 +1,18 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useContext, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
-import { MenuIcon, PhoneIcon, PlayIcon, RefreshIcon, ViewGridIcon, XIcon, CashIcon, CurrencyDollarIcon, SwitchHorizontalIcon } from "@heroicons/react/outline";
-import { ChevronDownIcon } from "@heroicons/react/solid";
-import { NavLink } from "react-router-dom";
+import { MenuIcon, XIcon, CashIcon, CurrencyDollarIcon } from "@heroicons/react/outline";
+import { NavLink, useNavigate } from "react-router-dom";
+import BankContext from "../Context/BankContext";
 
-const solutions = [
+const topMenuList = [
     {
-        name: "Deposit into yor account",
+        name: "Balance",
+        description: "Balance account",
+        href: "/balance",
+        icon: CurrencyDollarIcon,
+    },
+    {
+        name: "Deposit",
         description: "Make a deposit/transfer between your own accounts",
         href: "/deposit",
         icon: CashIcon,
@@ -17,38 +23,50 @@ const solutions = [
         href: "/withdraw",
         icon: CurrencyDollarIcon,
     },
-    { name: "Transfer to another account", description: "Perform a transfer to another bank account", href: "#", icon: SwitchHorizontalIcon },
     {
-        name: "Other Payments",
-        description: "Pay your basic services from your account",
-        href: "/none",
-        icon: ViewGridIcon,
+        name: "All Movements",
+        description: "Do you need money?, make a withdraw now",
+        href: "/history",
+        icon: CurrencyDollarIcon,
     },
-    {
-        name: "Automated Transfers",
-        description: "Build strategic funnels that will drive your customers to convert",
-        href: "/none",
-        icon: RefreshIcon,
-    },
-];
-const callsToAction = [
-    { name: "Watch Demo", href: "#", icon: PlayIcon },
-    { name: "Contact Sales", href: "#", icon: PhoneIcon },
 ];
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
+const loginSignupList = [
+    {
+        name: "Login",
+        description: "Login to your account",
+        href: "/signin",
+    },
+    {
+        name: "Create Account",
+        description: "Create your Account",
+        href: "/signup",
+    },
+];
 
 export default function TwNavbar() {
+    const { state, dispatch	 } = useContext(BankContext);
+    const [isRegistered, setIsRegistered] = useState(state.isLogged);
+    let navigate = useNavigate();
+
+    useEffect(() => {
+        console.log(`state:`);
+        console.log(state);
+
+        !state.isLogged && navigate("../signin", { replace: true });
+
+        setIsRegistered(state.isLogged);
+    }, [state]);
+
     return (
         <Popover className="relative bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
                     <div className="flex justify-start lg:w-0 lg:flex-1">
-                        <NavLink to="/">
+                        <NavLink to="/" className="text-3xl font-sans font-extra-bold">
                             {/* <span className="sr-only">Workflow</span> */}
-                            <span className="text-indigo-600 text-3xl font-sans font-extra-bold">BadBank</span>
+                            <span className="text-indigo-600">Bad</span>
+                            <span className="text-lime-500">Bank</span>
                             {/* <img className="h-8 w-auto sm:h-10" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="" /> */}
                         </NavLink>
                     </div>
@@ -58,79 +76,57 @@ export default function TwNavbar() {
                             <MenuIcon className="h-6 w-6" aria-hidden="true" />
                         </Popover.Button>
                     </div>
-                    <Popover.Group as="nav" className="hidden md:flex space-x-10">
-                        <NavLink to="/balance" className={({isActive}) => (isActive? 'text-indigo-500 font-bold hover:text-gray-900':'text-base font-medium text-gray-500 hover:text-gray-900')}>
-                            Balance
-                        </NavLink>
-                        <Popover className="relative">
-                            {({ open }) => (
-                                <>
-                                    <Popover.Button
-                                        className={classNames(
-                                            open ? "text-gray-900" : "text-gray-500",
-                                            "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                        )}
+                    {isRegistered && (
+                        <>
+                            <Popover.Group as="nav" className="hidden md:flex space-x-10">
+                                {topMenuList.map((topMenuItem, idx) => (
+                                    <NavLink
+                                        to={topMenuItem.href}
+                                        className={({ isActive }) =>
+                                            isActive ? "text-indigo-500 font-bold hover:text-gray-900" : "text-base font-medium text-gray-500 hover:text-gray-900"
+                                        }
+                                        key={idx}
                                     >
-                                        <span>Operations</span>
-                                        <ChevronDownIcon className={classNames(open ? "text-gray-600" : "text-gray-400", "ml-2 h-5 w-5 group-hover:text-gray-500")} aria-hidden="true" />
-                                    </Popover.Button>
+                                        {topMenuItem.name}
+                                    </NavLink>
+                                ))}
+                            </Popover.Group>
+                            <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 gap-6">
+                                <NavLink
+                                    to="#"
+                                    className="text-orange-700 font-bold hover:text-gray-900"
+                                    onClick={ () =>{
+                                        dispatch({
+                                            type: "SIGNIN",
+                                            payload: false
+                                        });
+                                        setIsRegistered(false);
+                                        
+                                    }}
+                                >
+                                    Logout
+                                </NavLink>
+                            </div>
+                        </>
+                    )}
 
-                                    <Transition
-                                        as={Fragment}
-                                        enter="transition ease-out duration-200"
-                                        enterFrom="opacity-0 translate-y-1"
-                                        enterTo="opacity-100 translate-y-0"
-                                        leave="transition ease-in duration-150"
-                                        leaveFrom="opacity-100 translate-y-0"
-                                        leaveTo="opacity-0 translate-y-1"
-                                    >
-                                        <Popover.Panel className="absolute z-10 -ml-4 mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">
-                                            <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                                                <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                                                    {solutions.map((item) => (
-                                                        <NavLink key={item.name} to={item.href} className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
-                                                            <item.icon className="flex-shrink-0 h-6 w-6 text-indigo-600" aria-hidden="true" />
-                                                            <div className="ml-4">
-                                                                <p className="text-base font-medium text-gray-900">{item.name}</p>
-                                                                <p className="mt-1 text-sm text-gray-500">{item.description}</p>
-                                                            </div>
-                                                        </NavLink>
-                                                    ))}
-                                                </div>
-                                                <div className="px-5 py-5 bg-gray-50 space-y-6 sm:flex sm:space-y-0 sm:space-x-10 sm:px-8">
-                                                    {callsToAction.map((item) => (
-                                                        <div key={item.name} className="flow-root">
-                                                            <NavLink to={item.href} className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">
-                                                                <item.icon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" />
-                                                                <span className="ml-3">{item.name}</span>
-                                                            </NavLink>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </Popover.Panel>
-                                    </Transition>
-                                </>
-                            )}
-                        </Popover>
-
-                        <NavLink to="/history" className={({isActive}) => (isActive? 'text-indigo-500 font-bold hover:text-gray-900':'text-base font-medium text-gray-500 hover:text-gray-900')}>
-                            All Data
-                        </NavLink>
-                    </Popover.Group>
-                    <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 gap-6">
-                        <NavLink to="/signin" className={({isActive}) => (isActive? 'text-indigo-500 font-bold hover:text-gray-900':'text-base font-medium text-gray-500 hover:text-gray-900')}>
-                            Login
-                        </NavLink>
-                        
-                        <NavLink
-                            to="/signup"
-                            className={({isActive}) => (isActive? 'text-indigo-500 font-bold hover:text-gray-900':'text-base font-medium text-gray-500 hover:text-gray-900')}
-                            // className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                        >
-                            Create Account
-                        </NavLink>
-                    </div>
+                    {!isRegistered && (
+                        <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 gap-6">
+                            {loginSignupList.map((loginSignupItem, idx) => (
+                                <NavLink
+                                    to={loginSignupItem.href}
+                                    className={({ isActive }) =>
+                                        isActive
+                                            ? "text-indigo-500 font-bold hover:text-gray-900"
+                                            : "text-base font-medium text-gray-500 hover:text-white hover:bg-indigo-600 hover:py-1 hover:px-2 hover:rounded-xl"
+                                    }
+                                    key={idx}
+                                >
+                                    {loginSignupItem.name}
+                                </NavLink>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -143,7 +139,7 @@ export default function TwNavbar() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
             >
-                <Popover.Panel focus className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden">
+                <Popover.Panel focus className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden bg-white" style={{ zIndex: 1 }}>
                     <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
                         <div className="pt-5 pb-6 px-5">
                             <div className="flex items-center justify-between">
@@ -157,29 +153,25 @@ export default function TwNavbar() {
                                     </Popover.Button>
                                 </div>
                             </div>
-                            <div className="mt-6">
-                                <nav className="grid gap-y-8">
-                                    {solutions.map((item) => (
-                                        <NavLink key={item.name} to={item.href} className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
-                                            <item.icon className="flex-shrink-0 h-6 w-6 text-indigo-600" aria-hidden="true" />
-                                            <span className="ml-3 text-base font-medium text-gray-900">{item.name}</span>
-                                        </NavLink>
-                                    ))}
-                                </nav>
-                            </div>
+                            {isRegistered && (
+                                <div className="mt-6">
+                                    <nav className="grid gap-y-8">
+                                        {topMenuList.map((item) => (
+                                            <NavLink key={item.name} to={item.href} className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                                                <item.icon className="flex-shrink-0 h-6 w-6 text-indigo-600" aria-hidden="true" />
+                                                <span className="ml-3 text-base font-medium text-gray-900">{item.name}</span>
+                                            </NavLink>
+                                        ))}
+                                    </nav>
+                                </div>
+                            )}
                         </div>
                         <div className="py-6 px-5 space-y-6">
-                            <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                                <NavLink to="/balance" className="text-base font-medium text-gray-900 hover:text-gray-700">
-                                    Balance
-                                </NavLink>
-
-                                <NavLink to="/history" className="text-base font-medium text-gray-900 hover:text-gray-700">
-                                    All Data
-                                </NavLink>
-                            </div>
                             <div>
-                                <NavLink to="#" className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                                <NavLink
+                                    to="#"
+                                    className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                                >
                                     Sign up
                                 </NavLink>
                                 <p className="mt-6 text-center text-base font-medium text-gray-500">

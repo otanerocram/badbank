@@ -1,20 +1,16 @@
+import { useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
+import BankContext from "../Context/BankContext";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
+    let navigate = useNavigate();
+    const { state, dispatch } = useContext(BankContext);
     const schema = yup.object({
-        username: yup.string().required("Please Enter a username"),
         email: yup.string().email().required("Please Enter your Email"),
-        confirmEmail: yup
-            .string()
-            .email()
-            .required()
-            .oneOf([yup.ref("email"), null], "Emails must match"),
         password: yup.string().required("Please Enter your password").matches("^.{8,}$", "Min 8 Character"),
-        confirmPassword: yup
-            .string()
-            .required()
-            .oneOf([yup.ref("password"), null], "Passwords must match"),
     });
 
     return (
@@ -22,17 +18,28 @@ const Signin = () => {
             <div className="lg:flex rounded-lg h-full">
                 <div
                     className="xl:w-2/5 lg:w-2/5 bg-indigo-700 py-16 xl:rounded-bl rounded-tl rounded-tr xl:rounded-tr-none bg-cover bg-center"
-                    style={{ backgroundImage: "url('https://picsum.photos/id/119/200/300')" }}
+                    style={{ backgroundImage: "url('https://picsum.photos/id/119/670/1200')" }}
                 ></div>
                 <div className="xl:w-4/5 lg:w-4/5 bg-gray-200 h-full pt-5 pb-5 xl:pr-5 xl:pl-0 rounded-tr rounded-br">
                     <Formik
                         initialValues={{ email: "", password: "" }}
                         validationSchema={schema}
                         onSubmit={(values, { setSubmitting }) => {
-                            console.log("submiting")
                             setTimeout(() => {
-                                alert(JSON.stringify(values, null, 2));
+                                console.log("submiting");
+                                dispatch({
+                                    type: "SIGNIN",
+                                    payload: true
+                                })
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Bienvenido',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                  })
                                 setSubmitting(false);
+                                navigate("../balance", { replace: true });
                             }, 400);
                         }}
                     >
@@ -68,11 +75,7 @@ const Signin = () => {
                             </div>
                             <button
                                 type="submit"
-                                // disabled={isSubmitting}
                                 role="button"
-                                onSubmit={e=>{
-                                    console.log(e)
-                                }}
                                 aria-label="Next step"
                                 className="flex items-center justify-center py-4 px-7 focus:outline-none bg-white border rounded border-gray-400 mt-7 md:mt-14 hover:bg-gray-100  focus:ring-2 focus:ring-offset-2 focus:ring-gray-700"
                             >

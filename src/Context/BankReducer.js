@@ -1,4 +1,4 @@
-import { SIGNIN, USER_LOGGED, UPDATE_BALANCE, UPDATE_DATA, LOG_OPERATION } from "./actions";
+import { SIGNIN, USER_LOGGED, UPDATE_BALANCE, UPDATE_DATA, LOG_OPERATION, SET } from "./actions";
 
 export default (state, action) => {
     const { payload, type } = action;
@@ -7,7 +7,15 @@ export default (state, action) => {
     const mydate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
     switch (type) {
+        case SET:
+            console.log("SET invoked");
+            return {
+                ...state,
+                payload
+            };
         case SIGNIN:
+            console.log("SIGNIN invoked");
+            console.log(action)
             return {
                 ...state,
                 isLogged: payload,
