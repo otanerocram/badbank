@@ -1,20 +1,18 @@
+import { useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
+import BankContext from "../Context/BankContext";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+    let navigate = useNavigate();
+    const { dispatch } = useContext(BankContext);
+
     const schema = yup.object({
         username: yup.string().required("Please Enter a username"),
         email: yup.string().email().required("Please Enter your Email"),
-        confirmEmail: yup
-            .string()
-            .email()
-            .required()
-            .oneOf([yup.ref("email"), null], "Emails must match"),
         password: yup.string().required("Please Enter your password").matches("^.{8,}$", "Min 8 Character"),
-        confirmPassword: yup
-            .string()
-            .required()
-            .oneOf([yup.ref("password"), null], "Passwords must match"),
     });
 
     return (
@@ -29,27 +27,52 @@ const Signup = () => {
                         initialValues={{ email: "", password: "" }}
                         validationSchema={schema}
                         onSubmit={(values, { setSubmitting }) => {
-                            console.log("submiting")
+                            console.log("Creating Account");
+                            console.log(values);
+
                             setTimeout(() => {
-                                alert(JSON.stringify(values, null, 2));
+                                dispatch({
+                                    type: "SIGNIN",
+                                    payload: true,
+                                });
+                                dispatch({
+                                    type: "SET",
+                                    payload: {
+                                        userEmail: values.email,
+                                        userName: values.username,
+                                    },
+                                });
+                                Swal.fire({
+                                    position: "top-end",
+                                    icon: "success",
+                                    title: "Bienvenido",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                                navigate("../balance", { replace: true });
                                 setSubmitting(false);
                             }, 400);
                         }}
                     >
                         <Form className="w-full bg-white p-10 h-full rounded-xl">
-                            <h1 tabIndex={0} role="heading" aria-label="profile information" className="focus:outline-none text-3xl font-bold text-gray-800 mt-12">
+                            <h1
+                                tabIndex={0}
+                                role="heading"
+                                aria-label="profile information"
+                                className="focus:outline-none text-3xl font-bold text-gray-800 mt-12"
+                            >
                                 Create Account
                             </h1>
-                           
+
                             <div className="mt-8 md:flex items-center">
                                 <div className="flex flex-col">
                                     <label className="mb-3 text-sm leading-none text-gray-800">Name</label>
                                     <Field
                                         type="text"
-                                        name="name"
+                                        name="username"
                                         className="w-64 bg-gray-100 text-sm font-medium leading-none text-gray-800 p-3 border rounded border-gray-200"
                                     />
-                                    <ErrorMessage name="name" component="div" className="text-xs text-red-500 font-bold" />
+                                    <ErrorMessage name="username" component="div" className="text-xs text-red-500 font-bold" />
                                 </div>
                             </div>
                             <div className="mt-8 md:flex items-center">
@@ -78,8 +101,8 @@ const Signup = () => {
                                 type="submit"
                                 // disabled={isSubmitting}
                                 role="button"
-                                onSubmit={e=>{
-                                    console.log(e)
+                                onSubmit={(e) => {
+                                    console.log(e);
                                 }}
                                 aria-label="Next step"
                                 className="flex items-center justify-center py-4 px-7 focus:outline-none bg-white border rounded border-gray-400 mt-7 md:mt-14 hover:bg-gray-100  focus:ring-2 focus:ring-offset-2 focus:ring-gray-700"
