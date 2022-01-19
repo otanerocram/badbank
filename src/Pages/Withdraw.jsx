@@ -73,7 +73,7 @@ const Withdraw = () => {
                                         Swal.fire({
                                             position: "top-end",
                                             icon: "success",
-                                            title: "Deposit approved",
+                                            title: "Withdraw approved",
                                             showConfirmButton: false,
                                             timer: 2500,
                                         });
