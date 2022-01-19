@@ -96,7 +96,7 @@ const Withdraw = () => {
                                             role="button"
                                             aria-label="Submit"
                                         >
-                                            Deposit
+                                            Withdraw
                                         </button>
                                     </div>
                                 </Form>
