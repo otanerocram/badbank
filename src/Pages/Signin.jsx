@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
     let navigate = useNavigate();
-    const { state, dispatch } = useContext(BankContext);
+    const { dispatch } = useContext(BankContext);
     const schema = yup.object({
         email: yup.string().email().required("Please Enter your Email"),
         password: yup.string().required("Please Enter your password").matches("^.{8,}$", "Min 8 Character"),
@@ -29,22 +29,31 @@ const Signin = () => {
                                 console.log("submiting");
                                 dispatch({
                                     type: "SIGNIN",
-                                    payload: true
-                                })
+                                    payload: true,
+                                });
+                                dispatch({
+                                    type: "SET",
+                                    payload: { userEmail: values.email},
+                                });
                                 Swal.fire({
-                                    position: 'top-end',
-                                    icon: 'success',
-                                    title: 'Bienvenido',
+                                    position: "top-end",
+                                    icon: "success",
+                                    title: "Bienvenido",
                                     showConfirmButton: false,
-                                    timer: 1500
-                                  })
+                                    timer: 1500,
+                                });
                                 setSubmitting(false);
                                 navigate("../balance", { replace: true });
                             }, 400);
                         }}
                     >
                         <Form className="w-full bg-white p-10 h-full rounded-xl">
-                            <h1 tabIndex={0} role="heading" aria-label="profile information" className="focus:outline-none text-3xl font-bold text-gray-800 mt-12">
+                            <h1
+                                tabIndex={0}
+                                role="heading"
+                                aria-label="profile information"
+                                className="focus:outline-none text-3xl font-bold text-gray-800 mt-12"
+                            >
                                 Login
                             </h1>
                             <p role="contentinfo" className=" focus:outline-nonetext-sm font-light leading-tight text-gray-600 mt-4">
@@ -76,7 +85,7 @@ const Signin = () => {
                             <button
                                 type="submit"
                                 role="button"
-                                aria-label="Next step"
+                                aria-label="Submit"
                                 className="flex items-center justify-center py-4 px-7 focus:outline-none bg-white border rounded border-gray-400 mt-7 md:mt-14 hover:bg-gray-100  focus:ring-2 focus:ring-offset-2 focus:ring-gray-700"
                             >
                                 <span className="text-sm font-medium text-center text-gray-800 capitalize">Login</span>

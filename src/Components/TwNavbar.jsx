@@ -100,6 +100,7 @@ export default function TwNavbar() {
                                             type: "SIGNIN",
                                             payload: false
                                         });
+                                        
                                         setIsRegistered(false);
                                         
                                     }}

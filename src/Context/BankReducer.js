@@ -11,10 +11,9 @@ export default (state, action) => {
             console.log("SET invoked");
             return {
                 ...state,
-                payload
+                ...payload
             };
         case SIGNIN:
-            console.log("SIGNIN invoked");
             console.log(action)
             return {
                 ...state,
